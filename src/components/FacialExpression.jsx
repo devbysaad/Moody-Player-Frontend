@@ -58,7 +58,7 @@ const FacialExpression = ({ setSongs }) => {
       setMood(expressionName);
 
       const BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL || "http://localhost:3000";
-      axios.get(`${BASE_URL}/songs?mood=${expressionName}`)
+      axios.get(`https://moody-player-backend-authenticated.vercel.app/songs?mood=${expressionName}`)
 
         .then((response) => {
           setSongs(response.data?.songs || []);
