@@ -14,7 +14,7 @@ const Register = () => {
     e.preventDefault();
     setError("");
     try {
-      await axios.post(`${BASE_URL}/auth/register`, form, {
+      await axios.post("https://moody-player-backend-authenticated.vercel.app/auth/register", form, {
         withCredentials: true,
       });
       navigate("/login");
