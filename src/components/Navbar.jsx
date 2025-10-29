@@ -1,59 +1,46 @@
-// src/components/Navbar.jsx
 import React from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
-const BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
+import { Link, useNavigate } from "react-router-dom";
 
-const Navbar = ({ user }) => {
-  const handleLogout = async () => {
-    await axios.post(`${BASE_URL}/auth/logout`, {}, { withCredentials: true });
-    window.location.href = "/login";
-  };
+const Navbar = () => {
+  const navigate = useNavigate();
+  const raw = localStorage.getItem("user");
+  let user = null;
+  try {
+    user = raw ? JSON.parse(raw) : null;
+  } catch (_) {
+    user = null;
+  }
+
+  // Logout moved to Profile page per requirements
 
   return (
-    <nav className="bg-gray-900 px-6 py-4 flex justify-between items-center shadow-md">
-      <Link to="/" className="text-2xl font-bold text-purple-500">
-        🎧 MoodySong
-      </Link>
+    <nav className="bg-gray-900 shadow-lg sticky top-0  z-50 ">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 flex flex-wrap gap-3 justify-between items-center">
+        <Link to="/" className="text-xl font-bold text-purple-400 hover:text-purple-300">
+          MoodyTunes
+        </Link>
 
-      <div className="flex items-center gap-6">
-        {user ? (
-          <>
-            <Link
-              to="/"
-              className="hover:text-purple-400 transition text-white"
-            >
-              Dashboard
-            </Link>
-            <Link
-              to="/profile"
-              className="hover:text-purple-400 transition text-white"
-            >
-              Profile
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-medium text-white"
-            >
-              Logout
-            </button>
-          </>
-        ) : (
-          <>
-            <Link
-              to="/login"
-              className="hover:text-purple-400 transition text-white"
-            >
-              Login
-            </Link>
-            <Link
-              to="/register"
-              className="hover:text-purple-400 transition text-white"
-            >
-              Register
-            </Link>
-          </>
-        )}
+        <div className="flex gap-4 md:gap-6 items-center flex-wrap justify-end">
+          {user ? (
+            <>
+              <Link to="/dashboard" className="text-gray-300 hover:text-white">
+                Dashboard
+              </Link>
+              <Link to="/profile" className="text-gray-300 hover:text-white">
+                Profile
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="text-gray-300 hover:text-white">
+                Login
+              </Link>
+              <Link to="/register" className="text-gray-300 hover:text-white">
+                Register
+              </Link>
+            </>
+          )}
+        </div>
       </div>
     </nav>
   );

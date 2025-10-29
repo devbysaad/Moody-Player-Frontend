@@ -1,49 +1,61 @@
-// src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import useAuth from "./hooks/useAuth";
 import Navbar from "./components/Navbar";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
-import Dashboard from "./pages/Dashboard";
+// PAGES
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 
-function App() {
-  const { user, loading } = useAuth();
-
-  if (loading)
-    return (
-      <div className="text-white flex justify-center items-center h-screen">
-        Loading...
-      </div>
-    );
-
+const App = () => {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-950 text-gray-100 font-sans">
-        <Navbar user={user} />
+      {/* Navbar appears on every page */}
+      <Navbar />
+
+      {/* Page Routes */}
+      <div className="min-h-screen bg-gray-950 text-white">
         <Routes>
+          {/* Root goes to Dashboard */}
           <Route
             path="/"
-            element={user ? <Dashboard /> : <Navigate to="/login" replace />}
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Protected routes */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/profile"
-            element={user ? <Profile /> : <Navigate to="/login" replace />}
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
           />
-          <Route
-            path="/login"
-            element={!user ? <Login /> : <Navigate to="/" replace />}
-          />
-          <Route
-            path="/register"
-            element={!user ? <Register /> : <Navigate to="/" replace />}
-          />
+
+          {/* Public auth routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </Router>
   );
-}
+};
 
 export default App;

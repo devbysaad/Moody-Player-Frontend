@@ -27,7 +27,7 @@ const MoodSongs = ({ songs = [] }) => {
   };
 
   return (
-    <div className="mt-8 bg-gray-900 rounded-xl p-6 shadow-lg">
+    <div className=" bg-gray-900 rounded-xl p-6 shadow-lg">
       <h2 className="text-2xl font-bold mb-4 text-white">🎧 Songs for Your Mood</h2>
 
       {!songs || songs.length === 0 ? (

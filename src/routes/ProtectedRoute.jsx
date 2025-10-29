@@ -2,14 +2,14 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
-  const user = localStorage.getItem("user"); // check if logged in
-
-  if (!user) {
-    // if no user, redirect to login page
-    return <Navigate to="/login" replace />;
+  const raw = localStorage.getItem("user");
+  let user = null;
+  try {
+    user = raw ? JSON.parse(raw) : null;
+  } catch (_) {
+    user = null;
   }
-
-  return children; // else show the page
+  return user ? children : <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoute;

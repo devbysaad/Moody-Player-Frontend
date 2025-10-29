@@ -3,22 +3,38 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-
 const Login = () => {
-  const BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
-  const [form, setForm] = useState({ identifier: "", password: "" });
+  const BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL || "http://localhost:3000";
+  const [form, setForm] = useState({ name: "", password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
     try {
-      await axios.post(`${BASE_URL}/auth/login`, form, {
+      const res = await axios.post(`${BASE_URL}/auth/login`, form, {
         withCredentials: true,
       });
-      navigate("/");
+
+      if (res.data.status === "success") {
+        // Persist auth state for ProtectedRoute/Navbar
+        try {
+          if (res.data.user) {
+            localStorage.setItem("user", JSON.stringify(res.data.user));
+          }
+          if (res.data.token) {
+            localStorage.setItem("token", res.data.token);
+          }
+        } catch (_) {}
+
+        navigate("/dashboard", { replace: true });
+      } else {
+        setError(res.data.message || "Login failed");
+      }
     } catch (err) {
+      console.error(err);
       setError(err.response?.data?.message || "Login failed");
     }
   };
@@ -39,9 +55,9 @@ const Login = () => {
 
         <input
           type="text"
-          placeholder="Email or Username"
-          value={form.identifier}
-          onChange={(e) => setForm({ ...form, identifier: e.target.value })}
+          placeholder="Username"
+          value={form.name}
+          onChange={(e) => setForm({ ...form, name: e.target.value })}
           autoComplete="username"
           className="w-full p-3 rounded-lg mb-3 bg-gray-800 text-white outline-none"
           required

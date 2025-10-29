@@ -57,7 +57,7 @@ const FacialExpression = ({ setSongs }) => {
 
       setMood(expressionName);
 
-      const BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL || "http://localhost:5000";
+      const BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL || "http://localhost:3000";
       axios.get(`${BASE_URL}/songs?mood=${expressionName}`)
 
         .then((response) => {
