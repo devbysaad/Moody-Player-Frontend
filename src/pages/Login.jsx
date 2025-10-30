@@ -4,7 +4,8 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL || "http://localhost:3000";
+  // Remove trailing slash if present to prevent double slashes
+  const BASE_URL = (import.meta.env.VITE_REACT_APP_BACKEND_BASEURL || "http://localhost:3000").replace(/\/$/, "");
   const [form, setForm] = useState({ name: "", password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();

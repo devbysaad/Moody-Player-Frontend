@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-const BASE_URL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
+// Remove trailing slash if present to prevent double slashes
+const BASE_URL = (import.meta.env.VITE_REACT_APP_BACKEND_BASEURL || "http://localhost:3000").replace(/\/$/, "");
 
 const Register = () => {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
