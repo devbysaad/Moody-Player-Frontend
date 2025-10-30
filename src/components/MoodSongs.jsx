@@ -27,34 +27,33 @@ const MoodSongs = ({ songs = [] }) => {
   };
 
   return (
-    <div className=" bg-gray-900 rounded-xl p-6 shadow-lg">
-      <h2 className="text-2xl font-bold mb-4 text-white">🎧 Songs for Your Mood</h2>
+    <div className="bg-gray-900/70 backdrop-blur-md rounded-xl p-8 shadow-[0_0_25px_rgba(139,92,246,0.2)] border border-purple-500/20">
+      <h2 className="text-2xl font-bold mb-6 text-center sm:text-left">
+        <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          🎧 Songs for Your Mood
+        </span>
+      </h2>
 
       {!songs || songs.length === 0 ? (
-        <p className="text-gray-400">No songs found for this mood.</p>
+        <div className="text-center py-10">
+          <p className="text-gray-400 mb-3">No songs found for this mood yet.</p>
+          <p className="text-sm text-gray-500">Try detecting your mood first!</p>
+        </div>
       ) : (
-        <ul className="space-y-3">
+        <ul className="space-y-4">
           {songs.map((song, index) => (
             <li
               key={index}
-              className="p-4 bg-gray-800 rounded-lg flex justify-between items-center hover:bg-gray-700 transition"
+              className="p-5 bg-gray-800/80 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-4 hover:bg-gray-700/90 transition-all duration-300 border border-gray-700/50 shadow-md"
             >
               {/* Song Info */}
-              <div className="flex flex-col">
-                <span className="font-medium text-white">{song.title || "Untitled"}</span>
-                <span className="text-sm text-gray-400">{song.artist || "Unknown Artist"}</span>
+              <div className="flex flex-col text-center sm:text-left w-full sm:w-auto">
+                <span className="font-medium text-white text-lg">{song.title || "Untitled"}</span>
+                <span className="text-sm text-gray-400 mt-1">{song.artist || "Unknown Artist"}</span>
               </div>
 
               {/* Audio Player */}
-              <div
-                className="p-2 rounded-lg shadow-inner"
-                style={{
-                  width: "250px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+              <div className="p-2 rounded-lg w-full sm:w-auto flex justify-center">
                 <audio
                   ref={(el) => (audioRefs.current[index] = el)}
                   src={song.audio}
@@ -62,10 +61,10 @@ const MoodSongs = ({ songs = [] }) => {
                 />
                 <button
                   onClick={() => handlePlay(index)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                  className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg w-full sm:w-auto ${
                     currentPlaying === index
-                      ? "bg-red-600 hover:bg-red-700"
-                      : "bg-purple-600 hover:bg-purple-700"
+                      ? "bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600"
+                      : "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                   }`}
                 >
                   {currentPlaying === index ? "Pause" : "Play"}

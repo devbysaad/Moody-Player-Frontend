@@ -9,6 +9,9 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 
+// Global CSS for consistent styling
+import "./index.css";
+
 const App = () => {
   return (
     <Router>
@@ -16,7 +19,7 @@ const App = () => {
       <Navbar />
 
       {/* Page Routes */}
-      <div className="min-h-screen bg-gray-950 text-white">
+      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-purple-950 text-white">
         <Routes>
           {/* Root goes to Dashboard */}
           <Route
