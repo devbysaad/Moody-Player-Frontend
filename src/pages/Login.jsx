@@ -14,7 +14,7 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await axios.post("https://moody-player-backend-authenticated.vercel.app/auth/login", form, {
+      const res = await axios.post(`${BASE_URL}/auth/login`, form, {
         withCredentials: true,
       });
 
