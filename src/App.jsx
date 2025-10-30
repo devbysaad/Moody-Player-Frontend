@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
+import AddSong from "./pages/AddSong";
 
 // Global CSS for consistent styling
 import "./index.css";
@@ -45,6 +46,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/add-song"
+            element={
+              <ProtectedRoute>
+                <AddSong />
               </ProtectedRoute>
             }
           />

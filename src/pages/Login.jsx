@@ -8,16 +8,31 @@ const Login = () => {
   const BASE_URL = (import.meta.env.VITE_REACT_APP_BACKEND_BASEURL || "http://localhost:3000").replace(/\/$/, "");
   const [form, setForm] = useState({ name: "", password: "" });
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     try {
-      const res = await axios.post(`${BASE_URL}/auth/login`, form, {
-        withCredentials: true,
-      });
+      // Try with /auth/login first (standard path)
+      let res;
+      try {
+        res = await axios.post(`${BASE_URL}/auth/login`, form, {
+          withCredentials: true,
+        });
+      } catch (err) {
+        // If that fails, try the root path as fallback
+        if (err.response?.status === 404) {
+          res = await axios.post(`${BASE_URL}/login`, form, {
+            withCredentials: true,
+          });
+        } else {
+          throw err;
+        }
+      }
 
       if (res.data.status === "success") {
         // Persist auth state for ProtectedRoute/Navbar
@@ -36,7 +51,9 @@ const Login = () => {
       }
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || "Login failed");
+      setError(err.response?.data?.message || "Login failed. Please check your credentials or try again later.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -78,6 +95,7 @@ const Login = () => {
                   autoComplete="username"
                   className="w-full p-4 pl-4 rounded-lg bg-gray-800/70 text-white outline-none border border-gray-700 focus:border-purple-500 transition duration-200"
                   required
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -93,17 +111,29 @@ const Login = () => {
                   autoComplete="current-password"
                   className="w-full p-4 pl-4 rounded-lg bg-gray-800/70 text-white outline-none border border-gray-700 focus:border-purple-500 transition duration-200"
                   required
+                  disabled={isLoading}
                 />
               </div>
             </div>
-          </div>
 
-          <button
-            type="submit"
-            className="w-full mt-8 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-4 rounded-lg font-semibold transition duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
-          >
-            Sign In
-          </button>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-4 px-6 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium text-lg hover:from-purple-700 hover:to-pink-700 transition duration-300 mt-6 flex items-center justify-center"
+            >
+              {isLoading ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Logging in...
+                </>
+              ) : (
+                "Login"
+              )}
+            </button>
+          </div>
 
           <p className="text-gray-400 text-sm mt-6 text-center">
             Don't have an account?{" "}
